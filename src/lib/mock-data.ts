@@ -1,8 +1,5 @@
-import contestantA from "@/assets/contestant-a.asset.json";
-import contestantB from "@/assets/contestant-b.asset.json";
-
-export const photoA = contestantA.url;
-export const photoB = contestantB.url;
+export const photoA = "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=500&fit=crop&auto=format";
+export const photoB = "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=500&fit=crop&auto=format";
 
 export type Contestant = {
   id: number;
