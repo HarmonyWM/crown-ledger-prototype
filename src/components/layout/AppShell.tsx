@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
-const nav = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const nav: NavItem[] = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/app/events", label: "Events", icon: CalendarDays },
   { to: "/app/contestants", label: "Contestants", icon: Users },
@@ -23,7 +24,7 @@ const nav = [
   { to: "/app/reports", label: "Reports", icon: FileBarChart },
   { to: "/app/admin", label: "Admin", icon: Shield },
   { to: "/app/roadmap", label: "Roadmap", icon: Rocket },
-] as const;
+];
 
 export function AppShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
