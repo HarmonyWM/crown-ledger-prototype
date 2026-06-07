@@ -4,12 +4,9 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect } from "react";
 
-import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -73,48 +70,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CrownLedger by Verity Digital" },
-      { name: "description", content: "The operating system for modern pageants. Transparency, technology and trust." },
-      { name: "author", content: "Verity Digital" },
-      { property: "og:title", content: "CrownLedger by Verity Digital" },
-      { property: "og:description", content: "The operating system for modern pageants. Transparency, technology and trust." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CrownLedger by Verity Digital" },
-      { name: "twitter:description", content: "The operating system for modern pageants. Transparency, technology and trust." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5E4sRBJyZLcz4HDmC3liele9FvB3/social-images/social-1780863311695-Generate__Premium_modern_logo_design_for__CrownLedger__platform._Elegant_sans-serif_typography_in_deep_black_with_soft_gold_accent,_minimal_geometric_crown_symbol_that_feels_sophisticated_and_enterprise-rea.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5E4sRBJyZLcz4HDmC3liele9FvB3/social-images/social-1780863311695-Generate__Premium_modern_logo_design_for__CrownLedger__platform._Elegant_sans-serif_typography_in_deep_black_with_soft_gold_accent,_minimal_geometric_crown_symbol_that_feels_sophisticated_and_enterprise-rea.webp" },
-    ],
-    links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" },
-      { rel: "stylesheet", href: appCss },
-    ],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
