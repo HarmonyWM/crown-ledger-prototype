@@ -9,10 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppVotingRouteImport } from './routes/app.voting'
+import { Route as AppTicketsRouteImport } from './routes/app.tickets'
+import { Route as AppSponsorsRouteImport } from './routes/app.sponsors'
+import { Route as AppRoadmapRouteImport } from './routes/app.roadmap'
+import { Route as AppReportsRouteImport } from './routes/app.reports'
+import { Route as AppLivestreamRouteImport } from './routes/app.livestream'
+import { Route as AppJudgingRouteImport } from './routes/app.judging'
+import { Route as AppEventsRouteImport } from './routes/app.events'
+import { Route as AppContestantsRouteImport } from './routes/app.contestants'
+import { Route as AppCommunicationsRouteImport } from './routes/app.communications'
+import { Route as AppAwardsRouteImport } from './routes/app.awards'
+import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
 
+const RoadmapRoute = RoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -28,39 +48,215 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVotingRoute = AppVotingRouteImport.update({
+  id: '/voting',
+  path: '/voting',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTicketsRoute = AppTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSponsorsRoute = AppSponsorsRouteImport.update({
+  id: '/sponsors',
+  path: '/sponsors',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRoadmapRoute = AppRoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLivestreamRoute = AppLivestreamRouteImport.update({
+  id: '/livestream',
+  path: '/livestream',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppJudgingRoute = AppJudgingRouteImport.update({
+  id: '/judging',
+  path: '/judging',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEventsRoute = AppEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppContestantsRoute = AppContestantsRouteImport.update({
+  id: '/contestants',
+  path: '/contestants',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCommunicationsRoute = AppCommunicationsRouteImport.update({
+  id: '/communications',
+  path: '/communications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAwardsRoute = AppAwardsRouteImport.update({
+  id: '/awards',
+  path: '/awards',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/roadmap': typeof RoadmapRoute
+  '/app/admin': typeof AppAdminRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/awards': typeof AppAwardsRoute
+  '/app/communications': typeof AppCommunicationsRoute
+  '/app/contestants': typeof AppContestantsRoute
+  '/app/events': typeof AppEventsRoute
+  '/app/judging': typeof AppJudgingRoute
+  '/app/livestream': typeof AppLivestreamRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/roadmap': typeof AppRoadmapRoute
+  '/app/sponsors': typeof AppSponsorsRoute
+  '/app/tickets': typeof AppTicketsRoute
+  '/app/voting': typeof AppVotingRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
   '/login': typeof LoginRoute
+  '/roadmap': typeof RoadmapRoute
+  '/app/admin': typeof AppAdminRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/awards': typeof AppAwardsRoute
+  '/app/communications': typeof AppCommunicationsRoute
+  '/app/contestants': typeof AppContestantsRoute
+  '/app/events': typeof AppEventsRoute
+  '/app/judging': typeof AppJudgingRoute
+  '/app/livestream': typeof AppLivestreamRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/roadmap': typeof AppRoadmapRoute
+  '/app/sponsors': typeof AppSponsorsRoute
+  '/app/tickets': typeof AppTicketsRoute
+  '/app/voting': typeof AppVotingRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/roadmap': typeof RoadmapRoute
+  '/app/admin': typeof AppAdminRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/awards': typeof AppAwardsRoute
+  '/app/communications': typeof AppCommunicationsRoute
+  '/app/contestants': typeof AppContestantsRoute
+  '/app/events': typeof AppEventsRoute
+  '/app/judging': typeof AppJudgingRoute
+  '/app/livestream': typeof AppLivestreamRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/roadmap': typeof AppRoadmapRoute
+  '/app/sponsors': typeof AppSponsorsRoute
+  '/app/tickets': typeof AppTicketsRoute
+  '/app/voting': typeof AppVotingRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/login'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/login'
+    | '/roadmap'
+    | '/app/admin'
+    | '/app/analytics'
+    | '/app/awards'
+    | '/app/communications'
+    | '/app/contestants'
+    | '/app/events'
+    | '/app/judging'
+    | '/app/livestream'
+    | '/app/reports'
+    | '/app/roadmap'
+    | '/app/sponsors'
+    | '/app/tickets'
+    | '/app/voting'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/login'
-  id: '__root__' | '/' | '/app' | '/login'
+  to:
+    | '/'
+    | '/login'
+    | '/roadmap'
+    | '/app/admin'
+    | '/app/analytics'
+    | '/app/awards'
+    | '/app/communications'
+    | '/app/contestants'
+    | '/app/events'
+    | '/app/judging'
+    | '/app/livestream'
+    | '/app/reports'
+    | '/app/roadmap'
+    | '/app/sponsors'
+    | '/app/tickets'
+    | '/app/voting'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/login'
+    | '/roadmap'
+    | '/app/admin'
+    | '/app/analytics'
+    | '/app/awards'
+    | '/app/communications'
+    | '/app/contestants'
+    | '/app/events'
+    | '/app/judging'
+    | '/app/livestream'
+    | '/app/reports'
+    | '/app/roadmap'
+    | '/app/sponsors'
+    | '/app/tickets'
+    | '/app/voting'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  RoadmapRoute: typeof RoadmapRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/roadmap': {
+      id: '/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof RoadmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -82,13 +278,148 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/voting': {
+      id: '/app/voting'
+      path: '/voting'
+      fullPath: '/app/voting'
+      preLoaderRoute: typeof AppVotingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tickets': {
+      id: '/app/tickets'
+      path: '/tickets'
+      fullPath: '/app/tickets'
+      preLoaderRoute: typeof AppTicketsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/sponsors': {
+      id: '/app/sponsors'
+      path: '/sponsors'
+      fullPath: '/app/sponsors'
+      preLoaderRoute: typeof AppSponsorsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/roadmap': {
+      id: '/app/roadmap'
+      path: '/roadmap'
+      fullPath: '/app/roadmap'
+      preLoaderRoute: typeof AppRoadmapRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/livestream': {
+      id: '/app/livestream'
+      path: '/livestream'
+      fullPath: '/app/livestream'
+      preLoaderRoute: typeof AppLivestreamRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/judging': {
+      id: '/app/judging'
+      path: '/judging'
+      fullPath: '/app/judging'
+      preLoaderRoute: typeof AppJudgingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/events': {
+      id: '/app/events'
+      path: '/events'
+      fullPath: '/app/events'
+      preLoaderRoute: typeof AppEventsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/contestants': {
+      id: '/app/contestants'
+      path: '/contestants'
+      fullPath: '/app/contestants'
+      preLoaderRoute: typeof AppContestantsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/communications': {
+      id: '/app/communications'
+      path: '/communications'
+      fullPath: '/app/communications'
+      preLoaderRoute: typeof AppCommunicationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/awards': {
+      id: '/app/awards'
+      path: '/awards'
+      fullPath: '/app/awards'
+      preLoaderRoute: typeof AppAwardsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/analytics': {
+      id: '/app/analytics'
+      path: '/analytics'
+      fullPath: '/app/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
+  AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppAwardsRoute: typeof AppAwardsRoute
+  AppCommunicationsRoute: typeof AppCommunicationsRoute
+  AppContestantsRoute: typeof AppContestantsRoute
+  AppEventsRoute: typeof AppEventsRoute
+  AppJudgingRoute: typeof AppJudgingRoute
+  AppLivestreamRoute: typeof AppLivestreamRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppRoadmapRoute: typeof AppRoadmapRoute
+  AppSponsorsRoute: typeof AppSponsorsRoute
+  AppTicketsRoute: typeof AppTicketsRoute
+  AppVotingRoute: typeof AppVotingRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
+  AppAnalyticsRoute: AppAnalyticsRoute,
+  AppAwardsRoute: AppAwardsRoute,
+  AppCommunicationsRoute: AppCommunicationsRoute,
+  AppContestantsRoute: AppContestantsRoute,
+  AppEventsRoute: AppEventsRoute,
+  AppJudgingRoute: AppJudgingRoute,
+  AppLivestreamRoute: AppLivestreamRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppRoadmapRoute: AppRoadmapRoute,
+  AppSponsorsRoute: AppSponsorsRoute,
+  AppTicketsRoute: AppTicketsRoute,
+  AppVotingRoute: AppVotingRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  RoadmapRoute: RoadmapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
