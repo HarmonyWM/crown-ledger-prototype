@@ -7,6 +7,9 @@ import { Progress } from "@/components/ui/progress";
 import { ticketTiers } from "@/lib/mock-data";
 import { Ticket as TicketIcon, QrCode, TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { SellTicketDialog } from "@/components/dialogs/SellTicketDialog";
+import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/app/tickets")({
   head: () => ({ meta: [{ title: "Tickets — CrownLedger" }] }),
