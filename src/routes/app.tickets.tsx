@@ -30,7 +30,7 @@ function Tickets() {
       <PageHeader
         title="Ticketing"
         subtitle="QR-secured tickets · Seat maps · Capacity controls"
-        actions={<Button className="bg-gold-gradient text-background"><TicketIcon className="h-4 w-4 mr-2"/>Open Box Office</Button>}
+        actions={<SellTicketDialog><Button className="bg-gold-gradient text-background"><TicketIcon className="h-4 w-4 mr-2"/>Open Box Office</Button></SellTicketDialog>}
       />
       <div className="grid sm:grid-cols-4 gap-4 mb-6">
         <Card className="glass border-border p-5"><div className="text-xs uppercase tracking-[0.15em] text-muted-foreground">Total revenue</div><div className="text-3xl font-display text-gradient-gold mt-2">R {totalRevenue.toLocaleString()}</div></Card>
@@ -46,7 +46,10 @@ function Tickets() {
             <div className="mt-4 text-4xl font-display text-gradient-gold">R {(t.sold*t.price).toLocaleString()}</div>
             <div className="text-xs text-muted-foreground">{t.sold} / {t.capacity} seats sold</div>
             <Progress value={(t.sold/t.capacity)*100} className="mt-3"/>
-            <div className="mt-5 flex items-center gap-2"><Button variant="outline" className="flex-1"><QrCode className="h-4 w-4 mr-2"/>Scan</Button><Button className="flex-1 bg-gold-gradient text-background">Sell</Button></div>
+            <div className="mt-5 flex items-center gap-2">
+              <Button variant="outline" className="flex-1" onClick={() => toast("Scanner opened", { description: "Awaiting QR scan…" })}><QrCode className="h-4 w-4 mr-2"/>Scan</Button>
+              <SellTicketDialog defaultTier={t.name}><Button className="flex-1 bg-gold-gradient text-background">Sell</Button></SellTicketDialog>
+            </div>
           </Card>
         ))}
       </div>
