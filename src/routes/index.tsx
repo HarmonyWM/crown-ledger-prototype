@@ -5,24 +5,25 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Crown, Sparkles, ShieldCheck, Gavel, Vote, Ticket, BarChart3, Radio, Megaphone,
-  CalendarDays, Trophy, ArrowRight, Check, Star, Users,
+  CalendarDays, ArrowRight, Check, Users, Eye, Zap, Heart,
 } from "lucide-react";
-import { stats } from "@/lib/mock-data";
+import { RequestDemoDialog } from "@/components/dialogs/RequestDemoDialog";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CrownLedger by Verity Digital — The Operating System for Modern Pageants" },
-      { name: "description", content: "Transforming pageantry through transparency, technology and trust. Run contestants, judging, tickets, voting and sponsors in one premium platform." },
-      { property: "og:title", content: "CrownLedger — Operating System for Modern Pageants" },
-      { property: "og:description", content: "Shopify for pageants. Canva for pageant operations. Salesforce for contestant management." },
+      { title: "CrownLedger by Verity Digital — The Operating System for Modern Pageantry" },
+      { name: "description", content: "Manage contestants, judges, sponsors, ticketing, audience voting, livestreams, communications and analytics from one platform." },
+      { property: "og:title", content: "CrownLedger — The Operating System for Modern Pageantry" },
+      { property: "og:description", content: "Built by Verity Digital to bring transparency, professionalism and efficiency to pageant management." },
     ],
   }),
   component: Landing,
 });
 
 const features = [
-  { icon: Users, title: "Contestant Management", desc: "Profiles, documents, photos, attendance and journey tracking in one luxury workspace." },
+  { icon: Users, title: "Contestant Management", desc: "Profiles, documents, photos, attendance and journey tracking in one workspace." },
   { icon: Gavel, title: "Live Judging", desc: "Weighted multi-category scoring with instant rankings and judge transparency modes." },
   { icon: Vote, title: "Audience Voting", desc: "Fraud-resistant voting with premium vote packages and live fan-favorite leaderboards." },
   { icon: Ticket, title: "Ticket Sales", desc: "General, VIP and VVIP tiers with QR tickets, seat maps and live capacity tracking." },
@@ -32,34 +33,76 @@ const features = [
   { icon: Radio, title: "Livestream + Chat", desc: "Branded livestream with sponsor banners, live reactions and viewer analytics." },
 ];
 
-const testimonials = [
-  { name: "Dr. Thandiwe Sibiya", role: "Chair, Beauty Industry SA", quote: "CrownLedger removed the paperwork chaos. Our judges scored on iPads and the results were on screen in seconds." },
-  { name: "Khaya Nyembe", role: "Director, Miss Soweto", quote: "Ticket revenue went up 38% in our first season. Sponsors finally have proof their money worked." },
-  { name: "Lerato M.", role: "Contestant, Class of 2026", quote: "I could see my schedule, points and feedback in one place. It made me feel taken seriously." },
+const why = [
+  { icon: Eye, title: "Transparent Scoring", desc: "Weighted, auditable scorecards every judge and organizer can defend." },
+  { icon: Zap, title: "Real-Time Judging", desc: "Tablet-driven scoring with live rankings and instant winner calculation." },
+  { icon: Crown, title: "Centralized Management", desc: "Contestants, sponsors, tickets and comms in one source of truth." },
+  { icon: Heart, title: "Audience Engagement", desc: "Voting, livestream and fan portals that grow your pageant's reach." },
+  { icon: ShieldCheck, title: "Professional Operations", desc: "POPIA & GDPR aligned with role-based access for every stakeholder." },
 ];
 
 const pricing = [
-  { name: "Starter", price: "R 2,500", per: "per event", desc: "For first-time organizers running a single pageant.", features: ["Up to 25 contestants", "Live judging", "Audience voting", "QR ticketing", "Basic analytics"], cta: "Start Free Trial" },
-  { name: "Professional", price: "R 7,500", per: "per event", featured: true, desc: "For franchised pageants and university circuits.", features: ["Up to 100 contestants", "Multi-event dashboard", "Sponsor portal", "Livestream module", "Custom branding", "Priority support"], cta: "Book Demo" },
-  { name: "Enterprise", price: "Custom", per: "annual licence", desc: "For national bodies and broadcasters.", features: ["Unlimited events & users", "White-label apps", "API & SSO", "Dedicated CSM", "Bias-detection AI", "On-site finale support"], cta: "Talk to Sales" },
+  { name: "Starter", price: "R 2,999", per: "per event", desc: "School & community pageants.", features: ["Up to 20 contestants", "Live judging", "Basic audience voting", "Ticket sales", "Contestant portal"], cta: "Start Free Trial" },
+  { name: "Professional", price: "R 7,999", per: "per event", featured: true, desc: "Regional & franchised pageants.", features: ["Up to 100 contestants", "Advanced judging", "Audience voting", "Sponsor portal", "Ticketing & communications", "Analytics dashboard"], cta: "Request Demo" },
+  { name: "Enterprise", price: "Custom", per: "annual licence", desc: "National pageants & organizations.", features: ["Unlimited contestants & judges", "Livestream integration", "Advanced analytics", "Custom branding", "Dedicated support", "API integrations"], cta: "Talk to Sales" },
 ];
+
+const addons = [
+  "Audience Voting Module", "Livestream Module", "Tablet Rental for Judges",
+  "Custom Event Branding", "Event Website", "SMS Notifications", "Professional Analytics Package",
+];
+
+const animatedStats = [
+  { v: 318, suffix: "", l: "Events Managed" },
+  { v: 12480, suffix: "", l: "Contestants Registered" },
+  { v: 2.4, suffix: "M", l: "Votes Processed", decimals: 1 },
+  { v: 84210, suffix: "", l: "Tickets Sold" },
+  { v: 182, suffix: "", l: "Sponsors Managed" },
+];
+
+function useCountUp(target: number, duration = 1600) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    let raf = 0; const start = performance.now();
+    const tick = (t: number) => {
+      const p = Math.min((t - start) / duration, 1);
+      setN(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return n;
+}
+
+function Stat({ v, suffix, l, decimals = 0 }: { v: number; suffix: string; l: string; decimals?: number }) {
+  const n = useCountUp(v);
+  const display = decimals > 0 ? n.toFixed(decimals) : Math.round(n).toLocaleString();
+  return (
+    <div className="glass rounded-2xl p-6 text-center">
+      <div className="text-3xl md:text-4xl font-display font-semibold text-gradient-gold">{display}{suffix}</div>
+      <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-2">{l}</div>
+    </div>
+  );
+}
 
 function Landing() {
   return (
     <div className="min-h-screen">
-      {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/60 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Logo />
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-foreground">Features</a>
+            <a href="#why" className="hover:text-foreground">Why CrownLedger</a>
             <a href="#pricing" className="hover:text-foreground">Pricing</a>
             <Link to="/app" className="hover:text-foreground">Live Demo</Link>
-            <Link to="/roadmap" className="hover:text-foreground">Roadmap</Link>
           </nav>
           <div className="flex items-center gap-2">
             <Link to="/login"><Button variant="ghost" size="sm">Sign in</Button></Link>
-            <Link to="/app"><Button size="sm" className="bg-gold-gradient text-background hover:opacity-90">Launch Demo <ArrowRight className="ml-1 h-3 w-3" /></Button></Link>
+            <RequestDemoDialog>
+              <Button size="sm" className="bg-gold-gradient text-background hover:opacity-90">Request Demo <ArrowRight className="ml-1 h-3 w-3" /></Button>
+            </RequestDemoDialog>
           </div>
         </div>
       </header>
@@ -72,37 +115,58 @@ function Landing() {
         </div>
         <div className="max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
           <Badge className="glass-gold text-gold border-0 mb-6">
-            <Sparkles className="h-3 w-3 mr-2" /> Trusted by 318 pageants across 14 countries
+            <Sparkles className="h-3 w-3 mr-2" /> A Verity Digital product
           </Badge>
           <h1 className="text-5xl md:text-7xl font-display font-semibold leading-[1.05] tracking-tight">
-            Transforming Pageantry Through<br />
-            <span className="text-gradient-gold">Transparency, Technology & Trust</span>
+            The Operating System for<br />
+            <span className="text-gradient-gold">Modern Pageantry</span>
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            CrownLedger is the complete operating system for modern pageants —
-            contestants, judging, ticketing, audience engagement and sponsor analytics in one premium platform.
+          <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            Manage contestants, judges, sponsors, ticketing, audience voting, livestreams, communications and analytics from one platform.
+          </p>
+          <p className="mt-3 text-sm text-muted-foreground max-w-2xl mx-auto">
+            Built by Verity Digital to bring transparency, professionalism and efficiency to pageant management.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
-            <Link to="/app"><Button size="lg" className="bg-gold-gradient text-background hover:opacity-90 shadow-glow h-12 px-6">
-              Book Demo <ArrowRight className="ml-2 h-4 w-4" />
-            </Button></Link>
-            <Link to="/login"><Button size="lg" variant="outline" className="h-12 px-6 border-border">
-              Start Free Trial
-            </Button></Link>
+            <RequestDemoDialog>
+              <Button size="lg" className="bg-gold-gradient text-background hover:opacity-90 shadow-glow h-12 px-6">
+                Request Demo <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </RequestDemoDialog>
+            <Link to="/app/events"><Button size="lg" variant="outline" className="h-12 px-6 border-border">Launch Event</Button></Link>
+            <Link to="/app"><Button size="lg" variant="ghost" className="h-12 px-6">Explore Platform</Button></Link>
           </div>
 
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { v: stats.contestants, l: "Contestants Managed" },
-              { v: stats.votes, l: "Votes Cast" },
-              { v: stats.events, l: "Events Hosted" },
-              { v: stats.tickets, l: "Tickets Sold" },
-            ].map((s) => (
-              <div key={s.l} className="glass rounded-2xl p-6">
-                <div className="text-3xl md:text-4xl font-display font-semibold text-gradient-gold">{s.v}</div>
-                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-2">{s.l}</div>
-              </div>
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-5 gap-4">
+            {animatedStats.map((s) => <Stat key={s.l} {...s} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* Mission */}
+      <section className="py-20 border-t border-border">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <Badge variant="outline" className="border-gold/40 text-gold mb-4">Our Mission</Badge>
+          <h2 className="text-3xl md:text-4xl font-display font-semibold leading-tight">
+            "CrownLedger exists to bring <span className="text-gradient-gold">transparency, accountability and professionalism</span> to pageant management."
+          </h2>
+        </div>
+      </section>
+
+      {/* Why */}
+      <section id="why" className="py-24 border-t border-border">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto">
+            <Badge variant="outline" className="border-gold/40 text-gold mb-4">Why CrownLedger</Badge>
+            <h2 className="text-4xl md:text-5xl font-display font-semibold">Pageantry, professionalized.</h2>
+          </div>
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {why.map((w) => (
+              <Card key={w.title} className="glass border-border p-6 hover:border-gold/40 transition">
+                <div className="h-11 w-11 rounded-xl bg-royal-gradient grid place-items-center mb-4"><w.icon className="h-5 w-5 text-gold" /></div>
+                <h3 className="font-semibold">{w.title}</h3>
+                <p className="text-sm text-muted-foreground mt-2">{w.desc}</p>
+              </Card>
             ))}
           </div>
         </div>
@@ -132,93 +196,46 @@ function Landing() {
         </div>
       </section>
 
-      {/* Showcase strip */}
-      <section className="py-20 border-t border-border">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <Badge variant="outline" className="border-primary/40 text-foreground mb-4">Finale Command Center</Badge>
-            <h2 className="text-4xl font-display font-semibold">Run finale night like a broadcast studio.</h2>
-            <p className="text-muted-foreground mt-4">
-              Live judge activity, contestant queue, stage timer, MC prompts and instant rankings — projected to the main screen and synchronized with your livestream.
-            </p>
-            <ul className="mt-6 space-y-3 text-sm">
-              {["Weighted scoring with transparency modes", "Real-time winner prediction", "MC dashboard with cues", "Automatic award calculation"].map((b) => (
-                <li key={b} className="flex items-start gap-3"><Check className="h-4 w-4 text-gold mt-0.5" /> {b}</li>
-              ))}
-            </ul>
-            <div className="mt-8"><Link to="/app/judging"><Button className="bg-gold-gradient text-background">Open Live Judging</Button></Link></div>
-          </div>
-          <div className="glass-gold rounded-3xl p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Live Now</div>
-                <div className="text-2xl font-display font-semibold mt-1">Miss UJ APK 2027</div>
-              </div>
-              <Badge className="bg-destructive/20 text-foreground border border-destructive/40">● LIVE</Badge>
-            </div>
-            <div className="space-y-3">
-              {["Tshegofatso Mokoena", "Lerato Khumalo", "Naledi Molefe", "Ayanda Mokoena"].map((n, i) => (
-                <div key={n} className="flex items-center gap-3 glass rounded-xl p-3">
-                  <div className="h-8 w-8 rounded-full bg-gold-gradient grid place-items-center text-background font-semibold text-sm">{i+1}</div>
-                  <div className="flex-1 text-sm font-medium">{n}</div>
-                  <div className="text-gold font-display text-lg">{(94.8 - i*1.7).toFixed(1)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-24 border-t border-border">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl font-display font-semibold text-center">Loved by the pageant world.</h2>
-          <div className="grid md:grid-cols-3 gap-4 mt-12">
-            {testimonials.map((t) => (
-              <Card key={t.name} className="glass border-border p-6">
-                <div className="flex gap-0.5 mb-4">{Array.from({length: 5}).map((_,i) => <Star key={i} className="h-4 w-4 fill-gold text-gold" />)}</div>
-                <p className="text-sm leading-relaxed">"{t.quote}"</p>
-                <div className="mt-5 flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-royal-gradient grid place-items-center text-xs font-semibold">{t.name.split(" ").map(w=>w[0]).join("").slice(0,2)}</div>
-                  <div>
-                    <div className="text-sm font-medium">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.role}</div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Pricing */}
       <section id="pricing" className="py-24 border-t border-border">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto">
             <Badge variant="outline" className="border-gold/40 text-gold mb-4">Pricing</Badge>
-            <h2 className="text-4xl md:text-5xl font-display font-semibold">Built for one pageant or a hundred.</h2>
+            <h2 className="text-4xl md:text-5xl font-display font-semibold">Built for one pageant or a national circuit.</h2>
             <p className="text-muted-foreground mt-4">Per-event pricing. No commission on ticket or vote revenue.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-5 mt-12">
             {pricing.map((p) => (
               <Card key={p.name} className={`p-7 border ${p.featured ? "glass-gold border-gold/40 relative shadow-glow" : "glass border-border"}`}>
                 {p.featured && <Badge className="absolute -top-3 left-7 bg-gold-gradient text-background">Most Popular</Badge>}
-                <div className="text-sm uppercase tracking-[0.2em] text-muted-foreground">{p.name}</div>
+                <div className="text-sm uppercase tracking-[0.2em] text-muted-foreground">CrownLedger {p.name}</div>
                 <div className="mt-3 flex items-baseline gap-2">
                   <span className="text-4xl font-display font-semibold">{p.price}</span>
                   <span className="text-sm text-muted-foreground">{p.per}</span>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">{p.desc}</p>
+                <p className="text-sm text-muted-foreground mt-2">Best for: {p.desc}</p>
                 <ul className="mt-6 space-y-2 text-sm">
                   {p.features.map((f) => <li key={f} className="flex gap-2 items-start"><Check className="h-4 w-4 text-gold mt-0.5 shrink-0" />{f}</li>)}
                 </ul>
-                <Link to="/login" className="block mt-7">
-                  <Button className={`w-full ${p.featured ? "bg-gold-gradient text-background hover:opacity-90" : ""}`} variant={p.featured ? "default" : "outline"}>
+                <RequestDemoDialog>
+                  <Button className={`w-full mt-7 ${p.featured ? "bg-gold-gradient text-background hover:opacity-90" : ""}`} variant={p.featured ? "default" : "outline"}>
                     {p.cta}
                   </Button>
-                </Link>
+                </RequestDemoDialog>
               </Card>
             ))}
+          </div>
+
+          <div className="mt-14">
+            <div className="text-center mb-6">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Optional Add-Ons</div>
+              <h3 className="text-2xl font-display mt-2">Extend any plan</h3>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2">
+              {addons.map((a) => (
+                <Badge key={a} variant="outline" className="border-border text-foreground py-2 px-4 text-sm">{a}</Badge>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -228,14 +245,15 @@ function Landing() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Crown className="h-10 w-10 text-gold mx-auto mb-6" />
           <h2 className="text-4xl md:text-5xl font-display font-semibold">The crown belongs on the contestant.<br/>The chaos belongs in the past.</h2>
-          <div className="mt-8 flex justify-center gap-3">
-            <Link to="/app"><Button size="lg" className="bg-gold-gradient text-background h-12 px-7">Launch Live Demo</Button></Link>
-            <Link to="/login"><Button size="lg" variant="outline" className="h-12 px-7">Start Free Trial</Button></Link>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <RequestDemoDialog>
+              <Button size="lg" className="bg-gold-gradient text-background h-12 px-7">Request Demo</Button>
+            </RequestDemoDialog>
+            <Link to="/app"><Button size="lg" variant="outline" className="h-12 px-7">Launch Live Demo</Button></Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t border-border py-12">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
@@ -248,7 +266,6 @@ function Landing() {
               <li><a href="#features" className="hover:text-gold">Features</a></li>
               <li><a href="#pricing" className="hover:text-gold">Pricing</a></li>
               <li><Link to="/app" className="hover:text-gold">Live Demo</Link></li>
-              <li><Link to="/roadmap" className="hover:text-gold">Roadmap</Link></li>
             </ul>
           </div>
           <div>
