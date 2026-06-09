@@ -6,7 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { contestants } from "@/lib/mock-data";
-import { Plus, Filter, Instagram, Twitter, Trophy } from "lucide-react";
+import { Plus, Filter, Instagram, Trophy } from "lucide-react";
+import { AddContestantDialog } from "@/components/dialogs/AddContestantDialog";
+import { toast } from "sonner";
+import { useState } from "react";
 
 export const Route = createFileRoute("/app/contestants")({
   head: () => ({ meta: [{ title: "Contestants — CrownLedger" }] }),
@@ -14,20 +17,27 @@ export const Route = createFileRoute("/app/contestants")({
 });
 
 function Contestants() {
+  const [q, setQ] = useState("");
+  const filtered = contestants.filter((c) =>
+    c.name.toLowerCase().includes(q.toLowerCase()) || c.number.toLowerCase().includes(q.toLowerCase())
+  );
   return (
     <div>
       <PageHeader
         title="Contestants"
         subtitle="10 contestants competing in Miss UJ APK 2027"
         actions={<>
-          <Button variant="outline"><Filter className="h-4 w-4 mr-2"/>Filter</Button>
-          <Button className="bg-gold-gradient text-background"><Plus className="h-4 w-4 mr-2"/>Add Contestant</Button>
+          <Button variant="outline" onClick={() => toast("Filter panel opened", { description: "Filter by province · score · status" })}><Filter className="h-4 w-4 mr-2"/>Filter</Button>
+          <AddContestantDialog>
+            <Button className="bg-gold-gradient text-background"><Plus className="h-4 w-4 mr-2"/>Add Contestant</Button>
+          </AddContestantDialog>
         </>}
       />
-      <div className="mb-5"><Input placeholder="Search by name or contestant number…" className="max-w-sm bg-secondary/50"/></div>
+      <div className="mb-5"><Input placeholder="Search by name or contestant number…" className="max-w-sm bg-secondary/50" value={q} onChange={(e) => setQ(e.target.value)}/></div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {contestants.map((c) => (
-          <Card key={c.id} className="glass border-border overflow-hidden hover:border-gold/40 transition group">
+        {filtered.map((c) => (
+          <Card key={c.id} className="glass border-border overflow-hidden hover:border-gold/40 transition group cursor-pointer" onClick={() => toast(`${c.name}`, { description: `Score ${c.score.toFixed(1)} · ${c.votes.toLocaleString()} votes · ${c.occupation}` })}>
+
             <div className="relative aspect-[4/5] overflow-hidden bg-secondary">
               <img src={c.photo} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700"/>
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"/>

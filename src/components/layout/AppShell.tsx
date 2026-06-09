@@ -1,33 +1,43 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, CalendarDays, Users, Gavel, Vote, Ticket, Radio,
-  Megaphone, BarChart3, MessagesSquare, Trophy, FileBarChart, Shield, Rocket, Bell, Search,
+  Megaphone, BarChart3, MessagesSquare, Trophy, FileBarChart, Shield, Rocket, Bell, Search, ChevronDown,
 } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { useRole, roleMeta, roleNav, type Role } from "@/lib/role-context";
+import { toast } from "sonner";
 
-type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
-const nav: NavItem[] = [
-  { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/app/events", label: "Events", icon: CalendarDays },
-  { to: "/app/contestants", label: "Contestants", icon: Users },
-  { to: "/app/judging", label: "Live Judging", icon: Gavel },
-  { to: "/app/voting", label: "Audience Voting", icon: Vote },
-  { to: "/app/tickets", label: "Tickets", icon: Ticket },
-  { to: "/app/livestream", label: "Livestream", icon: Radio },
-  { to: "/app/sponsors", label: "Sponsors", icon: Megaphone },
-  { to: "/app/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/app/communications", label: "Communications", icon: MessagesSquare },
-  { to: "/app/awards", label: "Awards", icon: Trophy },
-  { to: "/app/reports", label: "Reports", icon: FileBarChart },
-  { to: "/app/admin", label: "Admin", icon: Shield },
-  { to: "/app/roadmap", label: "Roadmap", icon: Rocket },
+type NavItem = { key: string; to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const allNav: NavItem[] = [
+  { key: "dashboard", to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { key: "events", to: "/app/events", label: "Events", icon: CalendarDays },
+  { key: "contestants", to: "/app/contestants", label: "Contestants", icon: Users },
+  { key: "judging", to: "/app/judging", label: "Live Judging", icon: Gavel },
+  { key: "voting", to: "/app/voting", label: "Audience Voting", icon: Vote },
+  { key: "tickets", to: "/app/tickets", label: "Tickets", icon: Ticket },
+  { key: "livestream", to: "/app/livestream", label: "Livestream", icon: Radio },
+  { key: "sponsors", to: "/app/sponsors", label: "Sponsors", icon: Megaphone },
+  { key: "analytics", to: "/app/analytics", label: "Analytics", icon: BarChart3 },
+  { key: "communications", to: "/app/communications", label: "Communications", icon: MessagesSquare },
+  { key: "awards", to: "/app/awards", label: "Awards", icon: Trophy },
+  { key: "reports", to: "/app/reports", label: "Reports", icon: FileBarChart },
+  { key: "admin", to: "/app/admin", label: "Admin Center", icon: Shield },
+  { key: "roadmap", to: "/app/roadmap", label: "Roadmap", icon: Rocket },
 ];
+
+const roleOrder: Role[] = ["super_admin", "organizer", "judge", "contestant", "sponsor", "audience"];
 
 export function AppShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { role, setRole } = useRole();
+  const allowed = new Set(roleNav[role]);
+  const nav = allNav.filter((i) => allowed.has(i.key));
+  const meta = roleMeta[role];
+
   return (
     <div className="min-h-screen flex bg-background">
       <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-sidebar sticky top-0 h-screen">
@@ -54,7 +64,31 @@ export function AppShell() {
             );
           })}
         </nav>
-        <div className="p-4 border-t border-sidebar-border">
+        <div className="p-4 border-t border-sidebar-border space-y-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-sidebar-accent transition text-left">
+              <Avatar className="h-9 w-9 border border-gold/40"><AvatarFallback className="bg-royal-gradient text-foreground text-xs">{meta.avatar}</AvatarFallback></Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-medium truncate">{meta.label}</div>
+                <div className="text-[10px] text-muted-foreground truncate">{meta.description}</div>
+              </div>
+              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-60">
+              <DropdownMenuLabel className="text-xs text-muted-foreground">Switch role (demo)</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {roleOrder.map((r) => (
+                <DropdownMenuItem key={r} onClick={() => { setRole(r); toast.success(`Switched to ${roleMeta[r].label}`); }}>
+                  <div>
+                    <div className="text-sm font-medium">{roleMeta[r].label}</div>
+                    <div className="text-[11px] text-muted-foreground">{roleMeta[r].description}</div>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild><Link to="/">Sign out</Link></DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <div className="glass-gold rounded-xl p-3 text-xs">
             <div className="font-semibold mb-1">Enterprise Plan</div>
             <div className="text-muted-foreground">Renews 12 Sep 2027</div>
@@ -73,12 +107,12 @@ export function AppShell() {
               <span className="relative flex h-2 w-2 mr-2"><span className="absolute inline-flex h-2 w-2 rounded-full bg-gold animate-ping opacity-60" /><span className="relative inline-flex h-2 w-2 rounded-full bg-gold" /></span>
               Miss UJ APK 2027 · Live
             </Badge>
-            <button className="relative p-2 rounded-lg hover:bg-secondary/60">
+            <button className="relative p-2 rounded-lg hover:bg-secondary/60" onClick={() => toast("3 new notifications", { description: "Judge scores pending · 2 ticket queries" })}>
               <Bell className="h-4 w-4" />
               <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-gold" />
             </button>
             <Avatar className="h-9 w-9 border border-gold/40">
-              <AvatarFallback className="bg-royal-gradient text-foreground text-xs">TS</AvatarFallback>
+              <AvatarFallback className="bg-royal-gradient text-foreground text-xs">{meta.avatar}</AvatarFallback>
             </Avatar>
           </div>
         </header>

@@ -6,6 +6,8 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { RoleProvider } from "@/lib/role-context";
 
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -80,8 +82,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <RoleProvider>
+        <Outlet />
+        <Toaster richColors position="top-right" />
+      </RoleProvider>
     </QueryClientProvider>
   );
 }
