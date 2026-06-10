@@ -24,6 +24,7 @@ function Comms() {
   const [audience, setAudience] = useState(audiences[0]);
   const [channels, setChannels] = useState({ push: true, email: true, inapp: true, sms: false, whatsapp: false });
   const [showSchedule, setShowSchedule] = useState(false);
+  const [showCompose, setShowCompose] = useState(false);
   const [scheduleTime, setScheduleTime] = useState("");
 
   function getChannelLabel() {
@@ -58,7 +59,7 @@ function Comms() {
       <PageHeader
         title="Communication Center"
         subtitle="One branded channel. No WhatsApp chaos."
-        actions={<Button className="bg-gold-gradient text-background" onClick={() => { setSubject(""); setBody(""); }}><Send className="h-4 w-4 mr-2" />New Broadcast</Button>}
+        actions={<Button className="bg-gold-gradient text-background" onClick={() => { setSubject(""); setBody(""); setShowCompose(true); }}><Send className="h-4 w-4 mr-2" />New Broadcast</Button>}
       />
 
       <div className="grid lg:grid-cols-3 gap-4 mb-6">
@@ -119,6 +120,39 @@ function Comms() {
           </div>
         </Card>
       </div>
+
+      {/* Compose Modal */}
+      <Dialog open={showCompose} onOpenChange={setShowCompose}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader><DialogTitle className="font-display text-2xl">New Broadcast</DialogTitle></DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div className="space-y-2">
+              <Label>Audience</Label>
+              <select className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2 text-sm" value={audience} onChange={e => setAudience(e.target.value)}>
+                {audiences.map(a => <option key={a} value={a}>{a}</option>)}
+              </select>
+            </div>
+            <div className="space-y-2"><Label>Subject *</Label><Input placeholder="Subject line…" value={subject} onChange={e => setSubject(e.target.value)} /></div>
+            <div className="space-y-2"><Label>Message</Label><textarea className="w-full bg-secondary/40 border border-border rounded-lg px-3 py-2 text-sm h-28 resize-none" value={body} onChange={e => setBody(e.target.value)} placeholder="Your message…" /></div>
+            <div className="space-y-2">
+              <Label>Channels</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {channelConfig.map(({ key, label, icon: Icon }) => (
+                  <label key={key} className="flex items-center gap-2 p-2.5 border border-border rounded-lg cursor-pointer hover:border-gold/40 transition text-sm">
+                    <input type="checkbox" checked={channels[key as keyof typeof channels]} onChange={e => setChannels(c => ({ ...c, [key]: e.target.checked }))} />
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => { setShowCompose(false); setShowSchedule(true); }}><Clock className="h-4 w-4 mr-2" />Schedule</Button>
+            <Button className="bg-gold-gradient text-background" onClick={() => { handleSend(); setShowCompose(false); }}><Send className="h-4 w-4 mr-2" />Send Now</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Schedule Modal */}
       <Dialog open={showSchedule} onOpenChange={setShowSchedule}>
